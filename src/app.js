@@ -14,6 +14,8 @@ const elements = {
 
 }
 
+let database = null;
+
 let state = {
     text: null,
     range: null,
@@ -196,6 +198,16 @@ const loadState = async () => {
         console.log(e);
     }
 }
+
+const createDatabase = () => {
+    //If the database and store have already exist it won't recreate
+    database = new Dexie("DexieStateDatabase");
+    //similar to how the cached version number works 
+    //if you change this version number it'll clear out your table and started fresh.
+    //states as a name of the store key value
+    //++id auto increment id column and date column
+    database.version(1).stores({ states: "++id, date" });
+}
 /**End Dexie*/
 
 
@@ -239,6 +251,7 @@ const setupPage = () => {
     elements.loadBtn.addEventListener('click', loadState);
     elements.persistBtn.addEventListener('click', persistStorage);
 
+    createDatabase();
     loadState();
     checkQuota();
 
