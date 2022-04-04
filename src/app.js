@@ -149,11 +149,11 @@ const loadStateLocalStorage = () => {
 /**End Local store API */
 
 /**Start LocalForage*/
-const saveState = async () => {
+const saveStateLocalForage = async () => {
     await localforage.setItem('state', state);
 }
 
-const loadState = async () => {
+const loadStateLocalForage = async () => {
     const newState = await localforage.getItem('state');
     if (newState) {
         state = { ...newState };
@@ -167,6 +167,37 @@ const loadState = async () => {
     }
 }
 /**End LocalForage */
+
+/**Start Dexie*/
+const saveState = async () => {
+    try {
+        await database.states.add({ ...state, id: undefined, date: new Date().getTime() });
+        //await database.states.put({ id: 1,  ...state, date: new Date().getTime() });
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+const loadState = async () => {
+    try {
+        const states = await database.states.orderBy("date").reverse().toArray();
+        const newState = states[0];
+
+        state = { ...newState };
+
+        // set all element values to loaded state
+        elements.textInpt.value = state.text;
+        elements.rangeInpt.value = state.range;
+        elements.switchInpt.checked = state.switch;
+        elements.radio1Inpt.checked = state.radio === 'red';
+        elements.radio2Inpt.checked = state.radio === 'blue';
+        //await database.states.put({ id: 1,  ...state, date: new Date().getTime() });
+    } catch (e) {
+        console.log(e);
+    }
+}
+/**End Dexie*/
+
 
 const handleChange = (e, key) => {
     state[key] = e.target.value;
