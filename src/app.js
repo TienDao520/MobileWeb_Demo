@@ -50,7 +50,37 @@ const saveState = async () => {
 }
 
 const loadState = async () => {
+    console.log('loading state')
 
+    // get file handle
+    const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
+
+    // get the file meta data
+    const fileData = await fileHandle.getFile();
+
+    try {
+        // create a file reader instance
+        const reader = new FileReader();
+
+        // file reader uses events instead of promises
+        reader.addEventListener('load', () => {
+            // the text will be within the reader.result property
+            const newState = JSON.parse(reader.result);
+            state = { ...newState };
+
+            // set the values of the controls on the page to match state
+            elements.textInpt.value = state.text;
+            elements.rangeInpt.value = state.range;
+            elements.switchInpt.checked = state.switch;
+            elements.radio1Inpt.checked = state.radio === 'red';
+            elements.radio2Inpt.checked = state.radio === 'blue';
+        });
+
+        // read the file data as text
+        reader.readAsText(fileData);
+    } catch (e) {
+        console.log('error loading state', e);
+    }
 }
 
 const handleChange = (e, key) => {
@@ -78,7 +108,7 @@ const setupPage = () => {
     elements.radio2Inpt.addEventListener('change', (e) => handleChange(e, 'radio'));
 
     elements.saveBtn.addEventListener('click', saveState);
-
+    elements.loadBtn.addEventListener('click', loadState);
 }
 
 document.addEventListener('init', setupPage);
