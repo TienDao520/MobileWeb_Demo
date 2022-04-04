@@ -8,6 +8,12 @@ let elements = {
   stopBtn: null,
 };
 
+const locate = () => { }
+const listen = () => { }
+const listenInterval = () => { }
+const stopListening = () => { }
+
+
 
 
 const setUpPage = (evt) => {
@@ -22,6 +28,11 @@ const setUpPage = (evt) => {
       listenIntervalBtn: document.querySelector('#listenIntervalBtn'),
       stopBtn: document.querySelector('#stopBtn'),
     };
+
+    elements.locateBtn.addEventListener('click', locate);
+    elements.listenBtn.addEventListener('click', listen);
+    elements.listenIntervalBtn.addEventListener('click', listenInterval);
+    elements.stopBtn.addEventListener('click', () => stopListening);
 
   }
 };
