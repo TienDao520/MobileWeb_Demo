@@ -49,3 +49,12 @@ img {
   align-items: center;
   flex-direction: row;
 }
+
+/* The progress bar, we need to make sure the width is 100% */
+ons-progress-bar {
+  width: 100%;
+}
+
+ons-progress-bar .progress-bar {
+  height: 8px;
+}

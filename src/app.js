@@ -49,6 +49,15 @@ const checkQuota = async () => {
     }
 }
 
+const persistStorage = async () => {
+    //Check if object exists for storage and persist
+    if (navigator.storage && navigator.storage.persist) {
+        const persistent = await navigator.storage.persist();
+        if (persistent) ons.notification.alert("Your data is persistent and will not clear unless the user manually clears it.")
+        else ons.notification.alert("Your data is NOT persistent and will be cleared to make space if the browser decides so")
+    }
+}
+
 const pickerOpts = {
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
     types: [
@@ -121,12 +130,12 @@ const loadStateFile = async () => {
 /**End File system API */
 
 /**Start Local store*/
-const saveState = () => {
+const saveStateLocalStorage = () => {
     //it except string only so we need JSON.stringify
     localStorage.setItem('state', JSON.stringify(state, null, 2));
 }
 
-const loadState = () => {
+const loadStateLocalStorage = () => {
     const newState = JSON.parse(localStorage.getItem('state'));
     state = { ...newState };
 
@@ -177,6 +186,7 @@ const setupPage = () => {
 
     elements.saveBtn.addEventListener('click', saveState);
     elements.loadBtn.addEventListener('click', loadState);
+    elements.persistBtn.addEventListener('click', persistStorage);
 
     loadState();
     checkQuota();
