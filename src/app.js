@@ -16,11 +16,27 @@ let state = {
     radio: null,
 }
 
+const pickerOpts = {
+    //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    types: [
+        {
+            description: 'JSON Object State',
+            accept: {
+                'application/json': ['.json']
+            }
+        },
+    ],
+    //don't allow users to use all option
+    excludeAcceptAllOption: true,
+    multiple: false
+};
+
 const saveState = async () => {
     console.log('saving state', state)
 
     //create a new handle
-    const newHandle = await window.showSaveFilePicker();
+    //Added pickerOpts to save as a certain type of file
+    const newHandle = await window.showSaveFilePicker(pickerOpts);
 
     //create a writeable to write to
     const writeableStream = await newHandle.createWritable();
