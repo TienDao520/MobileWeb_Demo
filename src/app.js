@@ -16,14 +16,33 @@ let state = {
     radio: null,
 }
 
+const saveState = async () => {
+    console.log('saving state', state)
+
+    //create a new handle
+    const newHandle = await window.showSaveFilePicker();
+
+    //create a writeable to write to
+    const writeableStream = await newHandle.createWritable();
+
+    //write to file no replacement, tab by 2 spaces
+    await writeableStream.write(JSON.stringify(state, null, 2));
+
+    //close the stream
+    await writeableStream.close();
+
+}
+
+const loadState = async () => {
+
+}
+
 const handleChange = (e, key) => {
     state[key] = e.target.value;
-    saveState();
 }
 
 const handleSwitchChange = (e) => {
     state.switch = e.target.checked;
-    saveState();
 }
 
 const setupPage = () => {
@@ -41,6 +60,8 @@ const setupPage = () => {
     elements.switchInpt.addEventListener('change', handleSwitchChange);
     elements.radio1Inpt.addEventListener('change', (e) => handleChange(e, 'radio'));
     elements.radio2Inpt.addEventListener('change', (e) => handleChange(e, 'radio'));
+
+    elements.saveBtn.addEventListener('click', saveState);
 
 }
 
