@@ -21,6 +21,34 @@ let state = {
     radio: null,
 }
 
+const sufixes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+const humanReadableSize = (bytes) => {
+    //determine which array at i is the suffix to use
+    //then rounds it up a little and and fixes it to two decimal points
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return !bytes && '0 Bytes' || (bytes / Math.pow(1024, i)).toFixed(2) + " " + sufixes[i];
+}
+
+const checkQuota = async () => {
+    if (navigator.storage && navigator.storage.estimate) {
+        const quota = await navigator.storage.estimate();
+
+        const percentUsed = (quota.usage / quota.quota) * 100;
+        const remaining = quota.quota - quota.usage;
+
+        const progress = document.createElement('ons-progress-bar');
+        progress.setAttribute('value', percentUsed);
+        progress.setAttribute('secondary-value', 100 - percentUsed);
+        elements.progressBarCntr.appendChild(progress);
+
+        const usedText = document.createTextNode(`${humanReadableSize(quota.usage)}`);
+        elements.used.appendChild(usedText);
+
+        const remainingText = document.createTextNode(`${humanReadableSize(remaining)}`);
+        elements.remaining.appendChild(remainingText);
+    }
+}
+
 const pickerOpts = {
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
     types: [
@@ -149,6 +177,10 @@ const setupPage = () => {
 
     elements.saveBtn.addEventListener('click', saveState);
     elements.loadBtn.addEventListener('click', loadState);
+
+    loadState();
+    checkQuota();
+
 }
 
 document.addEventListener('init', setupPage);
