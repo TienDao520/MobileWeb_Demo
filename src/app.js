@@ -7,6 +7,11 @@ const elements = {
     saveBtn: null,
     loadBtn: null,
 
+    used: null,
+    progressBarCntr: null,
+    remaining: null,
+    persistBtn: null,
+
 }
 
 let state = {
@@ -31,7 +36,10 @@ const pickerOpts = {
     multiple: false
 };
 
-const saveState = async () => {
+/**Start File system API
+ * Change this to saveState, loadState to use
+ */
+const saveStateFile = async () => {
     console.log('saving state', state)
 
     //create a new handle
@@ -49,7 +57,7 @@ const saveState = async () => {
 
 }
 
-const loadState = async () => {
+const loadStateFile = async () => {
     console.log('loading state')
 
     // get file handle
@@ -82,13 +90,41 @@ const loadState = async () => {
         console.log('error loading state', e);
     }
 }
+/**End File system API */
+
+/**Start Local store*/
+const saveState = () => {
+    //it except string only so we need JSON.stringify
+    localStorage.setItem('state', JSON.stringify(state, null, 2));
+}
+
+const loadState = () => {
+    const newState = JSON.parse(localStorage.getItem('state'));
+    state = { ...newState };
+
+    // set all element values to loaded state
+    elements.textInpt.value = state.text;
+    elements.rangeInpt.value = state.range;
+    elements.switchInpt.checked = state.switch;
+    elements.radio1Inpt.checked = state.radio === 'red';
+    elements.radio2Inpt.checked = state.radio === 'blue';
+}
+/**End Local store API */
 
 const handleChange = (e, key) => {
     state[key] = e.target.value;
+    //It will save automatically using localStorage for every change
+    //We don't need permission for it
+    //Just small data since it may effect to UI thread
+    saveState();
 }
 
 const handleSwitchChange = (e) => {
     state.switch = e.target.checked;
+    //It will save automatically using localStorage for every change
+    //We don't need permission for it
+    //Just small data since it may effect to UI thread
+    saveState();
 }
 
 const setupPage = () => {
@@ -100,6 +136,10 @@ const setupPage = () => {
     elements.saveBtn = document.querySelector('#save');
     elements.loadBtn = document.querySelector('#load');
 
+    elements.used = document.querySelector('#used');
+    elements.progressBarCntr = document.querySelector('#progressBarContainer');
+    elements.remaining = document.querySelector('#remaining');
+    elements.persistBtn = document.querySelector('#persist');
 
     elements.textInpt.addEventListener('change', (e) => handleChange(e, 'text'));
     elements.rangeInpt.addEventListener('change', (e) => handleChange(e, 'range'));
