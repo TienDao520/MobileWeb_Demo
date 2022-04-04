@@ -148,6 +148,26 @@ const loadStateLocalStorage = () => {
 }
 /**End Local store API */
 
+/**Start LocalForage*/
+const saveState = async () => {
+    await localforage.setItem('state', state);
+}
+
+const loadState = async () => {
+    const newState = await localforage.getItem('state');
+    if (newState) {
+        state = { ...newState };
+
+        // set all element values to loaded state
+        elements.textInpt.value = state.text;
+        elements.rangeInpt.value = state.range;
+        elements.switchInpt.checked = state.switch;
+        elements.radio1Inpt.checked = state.radio === 'red';
+        elements.radio2Inpt.checked = state.radio === 'blue';
+    }
+}
+/**End LocalForage */
+
 const handleChange = (e, key) => {
     state[key] = e.target.value;
     //It will save automatically using localStorage for every change
