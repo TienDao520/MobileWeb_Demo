@@ -3,9 +3,18 @@ const app = {
     logs: [],
     loadedLogs: false,
 
+    idleDetector: null,
+    idleState: {},
+    abortController: null,
+
     elements: {
         stateEl: null,
         logList: null,
+
+        idleStateEL: null,
+        startIdleBtn: null,
+        stopIdleBtn: null,
+
     }
 }
 
@@ -124,10 +133,62 @@ const loadLogs = async () => {
     }
 };
 
+const onIdleChange = () => {
+    //const userState = app.idleDetector.userState;
+    //const screenState = app.idleDetector.screenState;
+    //userState -> active or idle
+    //screenState -> unlocked or locked
+    const { userState, screenState } = app.idleDetector;
+    app.idleState = {
+        userState,
+        screenState,
+    };
+    app.elements.idleStateEL.innerHTML = `${userState}, ${screenState}`;
+    console.log(`Idle change: ${userState}, ${screenState}.`);
+};
+
+const startIdleDetection = async () => {
+    if ((await IdleDetector.requestPermission()) != 'granted') {
+        console.error('Idle detection permission denied.');
+        return;
+    }
+
+    try {
+        app.idleDetector = new IdleDetector();
+        app.abortController = new AbortController();
+        app.elements.idleStateEL.innerHTML = `Detecting`;
+        app.idleDetector.addEventListener('change', onIdleChange);
+
+        await app.idleDetector.start({
+            threshold: 60000, // 60 seconds = 6000ms
+            signal: app.abortController.signal, // Hook up abort controller in order to stop the detector later
+        });
+        console.log('IdleDetector is active.');
+    } catch (e) {
+        app.elements.idleStateEL.innerHTML = `Not Detecting`;
+        console.error(e.name, e.message);
+    }
+};
+
+const stopIdleDetection = () => {
+    try {
+        app.abortController.abort();
+        app.elements.idleStateEL.innerHTML = `Not Detecting`;
+    } catch (error) {
+        console.log('IdleDetector is stopped.', error);
+    }
+
+};
+
+
 const setupPage = async () => {
     // Init state and render status
     app.elements.visibilityState = document.querySelector('#status');
     app.elements.logList = document.querySelector('#log-list')
+
+    app.elements.idleStateEL = document.querySelector('#idleStatus');
+    app.elements.startIdleBtn = document.querySelector('#startIdleBtn');
+    app.elements.stopIdleBtn = document.querySelector('#stopIdleBtn');
 
     await loadLogs();
     renderState();
@@ -148,6 +209,9 @@ const setupPage = async () => {
     window.addEventListener('freeze', onFreeze);
     window.addEventListener('resume', determineState);
 
+    // Idle Detection API
+    app.elements.startIdleBtn.addEventListener('click', startIdleDetection);
+    app.elements.stopIdleBtn.addEventListener('click', stopIdleDetection);
 
 }
 
