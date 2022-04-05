@@ -52,3 +52,11 @@ img {
 .state {
   justify-content: center;
 }
+
+
+#backgroundFetchProgress {
+  width: 90%;
+}
+#backgroundFetchProgress .progress-bar {
+  height: 8px;
+}

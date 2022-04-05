@@ -29,6 +29,9 @@ const app = {
 
         backgroundSyncBtn: null,
 
+        backgroundFetchProgress: null,
+        backgroundFetchBtn: null,
+
     }
 }
 
@@ -259,6 +262,42 @@ const checkForBackgroundSync = async () => {
     }
 };
 
+const onFetchProgress = async (e) => {
+    const progEvent = e.currentTarget;
+    if (progEvent?.result === 'failure') {
+        ons.notification.alert(`Could not fetch the requested document: ${progEvent.failureReason}`);
+    }
+
+    const progress = Math.round((progEvent.downloaded / progEvent.downloadTotal) * 100);
+    app.elements.backgroundFetchProgress.setAttribute('value', progress);
+};
+
+const startBackgroundFetch = async () => {
+    const registration = await navigator.serviceWorker.ready;
+    try {
+        const files = [
+            'https://raw.githubusercontent.com/yourkin/fileupload-fastapi/a85a697cab2f887780b3278059a0dd52847d80f3/tests/data/test-10mb.bin',
+            'https://sabnzbd.org/tests/internetspeed/20MB.bin',
+        ];
+        app.elements.backgroundFetchProgress.setAttribute('value', 0);
+        const bgFetch = await registration.backgroundFetch.fetch('my-fetch', files, {
+            title: '30 MB Test Files',
+            icons: [
+                {
+                    sizes: '300x300',
+                    src: 'https://cdn-icons-png.flaticon.com/512/1211/1211796.png',
+                    type: 'image/png',
+                },
+            ],
+            //Added for progress update
+            //               MB     KB     B
+            downloadTotal: 30 * 1024 * 1024,
+        });
+        bgFetch.addEventListener('progress', onFetchProgress);
+    } catch (e) {
+        console.error('Background Sync could not be registered!', e);
+    }
+};
 
 const setupPage = async () => {
     // Init state and render status
@@ -278,6 +317,9 @@ const setupPage = async () => {
     app.elements.landscapeBtn = document.querySelector('#landscapeBtn');
 
     app.elements.backgroundSyncBtn = document.querySelector('#backgroundSyncBtn');
+
+    app.elements.backgroundFetchProgress = document.querySelector('#backgroundFetchProgress');
+    app.elements.backgroundFetchBtn = document.querySelector('#backgroundFetchBtn');
 
     await loadLogs();
     renderState();
@@ -321,6 +363,9 @@ const setupPage = async () => {
     checkForBackgroundSync();
     app.elements.backgroundSyncBtn.addEventListener('click', registerForBackgroundSync);
 
+    // Background Fetch API
+    getCachedFiles();
+    app.elements.backgroundFetchBtn.addEventListener('click', startBackgroundFetch);
 }
 
 document.addEventListener('init', setupPage);
