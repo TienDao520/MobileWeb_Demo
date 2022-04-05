@@ -40,9 +40,19 @@ const determineState = () => {
 }
 
 
-const renderLog = (state, time) => {
+const renderLog = async (state, time) => {
     const newStateEL = document.createElement('ons-list-item');
     newStateEL.setAttribute('modifier', 'longdivider');
+
+    if (state && time) {
+        const left = document.createElement('div');
+        left.classList.add('left');
+        const badge = document.createElement('span');
+        badge.classList.add('notification');
+        badge.appendChild(document.createTextNode(' '));
+        left.appendChild(badge);
+        newStateEL.append(left);
+    }
 
     const center = document.createElement('div');
     center.classList.add('center');
@@ -65,11 +75,11 @@ const renderLog = (state, time) => {
         ];
     }
 
-    // try {
-    //   localforage.setItem('logs', app.logs);
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+        localforage.setItem('logs', app.logs);
+    } catch (e) {
+        console.error(e);
+    }
 
     app.elements.logList.appendChild(newStateEL);
 };
@@ -80,10 +90,30 @@ const renderState = () => {
     renderLog();
 };
 
-const setupPage = () => {
+
+const loadLogs = async () => {
+    //Check whether loadedLogs already
+    if (app.loadedLogs) return;
+
+    try {
+        const logs = (await localforage.getItem('logs')) || [];
+        //array fetch from localforage
+        app.logs = [...logs];
+        app.logs.forEach((l) => renderLog(l.state, l.time));
+        app.loadedLogs = true;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+const setupPage = async () => {
     // Init state and render status
     app.elements.visibilityState = document.querySelector('#status');
-    app.elements.logList = document.querySelector('#log-list');
+    app.elements.logList = document.querySelector('#log-list')
+
+    await loadLogs();
+    renderState();
+
 
     // Legacy page focus and blur
     window.addEventListener('focus', determineState);
