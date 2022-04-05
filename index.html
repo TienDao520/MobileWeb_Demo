@@ -83,6 +83,15 @@
             <ons-button modifier="large" id="backgroundSyncBtn">Enable Background Sync</ons-button>
           </div>
         </ons-list-item>
+        <ons-list-header>Background Fetch</ons-list-header>
+        <ons-list-item modifier="longdivider">
+          <div class="center ">
+            <ons-progress-bar id="backgroundFetchProgress" value="0" secondary-value="100"></ons-progress-bar>
+          </div>
+          <div class="right">
+            <ons-button id="backgroundFetchBtn">Fetch</ons-button>
+          </div>
+        </ons-list-item>
       </on-list>
     </ons-page>
   </template>
