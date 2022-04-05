@@ -211,6 +211,31 @@ const acquireWakeLock = async () => {
     }
 };
 
+const renderOrientation = () => {
+    const orientation = screen.orientation.type;
+    app.elements.orientationStateEL.innerHTML = orientation;
+};
+
+// choose between primary and secondary giving it to specific primary will be the regular portrait mode, 
+//giving it secondary will be like the upside down portrait mode.
+const lockPortraitOrientation = async () => {
+    try {
+        await document.body.requestFullscreen();
+        await screen.orientation.lock('portrait');
+    } catch (e) {
+        app.elements.orientationStateEL.innerHTML = e;
+    }
+};
+
+const lockLandscapeOrientation = async () => {
+    try {
+        await document.body.requestFullscreen();
+        await screen.orientation.lock('landscape');
+    } catch (e) {
+        app.elements.orientationStateEL.innerHTML = e;
+    }
+};
+
 const setupPage = async () => {
     // Init state and render status
     app.elements.visibilityState = document.querySelector('#status');
@@ -255,6 +280,16 @@ const setupPage = async () => {
     app.elements.acquireLockBtn.addEventListener('click', acquireWakeLock);
     app.elements.releaseLockBtn.addEventListener('click', releaseWakeLock);
 
+    // Orientation API
+    // Check whether it has an  onchange property
+    //and if it does it's similar to how the broadcast channel API works 
+    //you can't add an event listener, you can only give it a callback function so.
+    if ('onchange' in screen.orientation) {
+        screen.orientation.onchange = renderOrientation;
+        renderOrientation();
+    }
+    app.elements.portraitBtn.addEventListener('click', lockPortraitOrientation);
+    app.elements.landscapeBtn.addEventListener('click', lockLandscapeOrientation);
 
 }
 
