@@ -7,6 +7,8 @@ const app = {
     idleState: {},
     abortController: null,
 
+    wakeLock: null,
+
     elements: {
         stateEl: null,
         logList: null,
@@ -14,6 +16,10 @@ const app = {
         idleStateEL: null,
         startIdleBtn: null,
         stopIdleBtn: null,
+
+        lockStateEL: null,
+        acquireLockBtn: null,
+        releaseLockBtn: null,
 
     }
 }
