@@ -33,6 +33,23 @@
       <ons-list modifier="inset" id="log-list">
         <ons-list-header>Visibility Logs</ons-list-header>
       </ons-list>
+      <on-list>
+        <ons-list-header>Idle</ons-list-header>
+        <ons-list-item>
+          <div class="center state">
+            <span class="notification" id="idleStatus">Not Detecting</span>
+          </div>
+        </ons-list-item>
+        <ons-list-item modifier="longdivider">
+          <div class="left">
+            <ons-button id="startIdleBtn">Start Idle Detection</ons-button>
+          </div>
+          <div class="right">
+            <ons-button id="stopIdleBtn">Stop Idle Detection</ons-button>
+          </div>
+        </ons-list-item>
+
+      </on-list>
     </ons-page>
   </template>
 </body>
