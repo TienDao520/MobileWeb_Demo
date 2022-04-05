@@ -186,6 +186,27 @@ const stopIdleDetection = () => {
 
 };
 
+const releaseWakeLock = async () => {
+    try {
+        await app.wakeLock.release();
+        app.elements.lockStateEL.innerHTML = 'Wake Lock Released';
+    } catch (e) {
+        console.error(e);
+        app.elements.lockStateEL.innerHTML = e;
+    }
+};
+
+const acquireWakeLock = async () => {
+    try {
+        app.wakeLock = await navigator.wakeLock.request('screen');
+        app.wakeLock.addEventListener('release', releaseWakeLock);
+        app.elements.lockStateEL.innerHTML = 'Wake Lock Acquired';
+    } catch (e) {
+        console.error(e);
+        app.elements.lockStateEL.innerHTML = e;
+    }
+};
+
 
 const setupPage = async () => {
     // Init state and render status
@@ -195,6 +216,10 @@ const setupPage = async () => {
     app.elements.idleStateEL = document.querySelector('#idleStatus');
     app.elements.startIdleBtn = document.querySelector('#startIdleBtn');
     app.elements.stopIdleBtn = document.querySelector('#stopIdleBtn');
+
+    app.elements.lockStateEL = document.querySelector('#lockStatus');
+    app.elements.acquireLockBtn = document.querySelector('#acquireLockBtn');
+    app.elements.releaseLockBtn = document.querySelector('#releaseLockBtn');
 
     await loadLogs();
     renderState();
@@ -218,6 +243,11 @@ const setupPage = async () => {
     // Idle Detection API
     app.elements.startIdleBtn.addEventListener('click', startIdleDetection);
     app.elements.stopIdleBtn.addEventListener('click', stopIdleDetection);
+
+    // Wake Lock API
+    app.elements.acquireLockBtn.addEventListener('click', acquireWakeLock);
+    app.elements.releaseLockBtn.addEventListener('click', releaseWakeLock);
+
 
 }
 
