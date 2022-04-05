@@ -36,3 +36,19 @@ p {
 img {
   width: 150px;
 }
+
+.notification {
+  padding: 0px 8px;
+}
+
+#log-list {
+  margin: 12px;
+  /* make the list scroll when it gets to 300 px */
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+
+.state {
+  justify-content: center;
+}
