@@ -39,6 +39,24 @@ const determineState = () => {
     return renderState();
 }
 
+const onFreeze = () => {
+    app.visibilityState = 'frozen';
+    renderState();
+};
+
+const onHide = (e) => {
+    // If true, page will enter the back-forward cache of the browser
+    // this is also considered frozen
+    if (e.persisted) {
+        // If the event persisted, your app will enter the back/forward cache
+        // of the browser and this is considered frozen
+        onFreeze();
+    } else {
+        // Otherwise page is just terminated
+        app.visibilityState = 'terminated';
+        renderState();
+    }
+};
 
 const renderLog = async (state, time) => {
     const newStateEL = document.createElement('ons-list-item');
@@ -121,13 +139,13 @@ const setupPage = async () => {
 
     // Show / Hide API
     window.addEventListener('pageshow', determineState);
-    window.addEventListener('pagehide', determineState);
+    window.addEventListener('pagehide', onHide);
 
     // Page Lifecycle API
     window.addEventListener('visibilitychange', determineState);
 
     // Freeze / Resume API
-    window.addEventListener('freeze', determineState);
+    window.addEventListener('freeze', onFreeze);
     window.addEventListener('resume', determineState);
 
 
