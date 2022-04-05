@@ -21,6 +21,10 @@ const app = {
         acquireLockBtn: null,
         releaseLockBtn: null,
 
+        orientationStateEL: null,
+        portraitBtn: null,
+        landscapeBtn: null,
+
     }
 }
 
@@ -207,7 +211,6 @@ const acquireWakeLock = async () => {
     }
 };
 
-
 const setupPage = async () => {
     // Init state and render status
     app.elements.visibilityState = document.querySelector('#status');
@@ -220,6 +223,10 @@ const setupPage = async () => {
     app.elements.lockStateEL = document.querySelector('#lockStatus');
     app.elements.acquireLockBtn = document.querySelector('#acquireLockBtn');
     app.elements.releaseLockBtn = document.querySelector('#releaseLockBtn');
+
+    app.elements.orientationStateEL = document.querySelector('#orientationStatus');
+    app.elements.portraitBtn = document.querySelector('#portraitBtn');
+    app.elements.landscapeBtn = document.querySelector('#landscapeBtn');
 
     await loadLogs();
     renderState();
