@@ -9,6 +9,8 @@ const app = {
 
     wakeLock: null,
 
+    bgSyncID: 'sync-messages',
+
     elements: {
         stateEl: null,
         logList: null,
@@ -24,6 +26,8 @@ const app = {
         orientationStateEL: null,
         portraitBtn: null,
         landscapeBtn: null,
+
+        backgroundSyncBtn: null,
 
     }
 }
@@ -236,6 +240,26 @@ const lockLandscapeOrientation = async () => {
     }
 };
 
+const checkForBackgroundSync = async () => {
+    const registration = await navigator.serviceWorker.ready;
+    try {
+        //Get an array of all the sync that registered
+        const tags = await registration.sync.getTags();
+        //Check if your tags include
+        //If yes we skip since we don't need to enable background sync twice
+        if (tags.includes('sync-messages')) {
+            console.log('Messages sync already requested');
+            app.elements.backgroundSyncBtn.setAttribute('disabled', true);
+            app.elements.backgroundSyncBtn.innerHTML = `Background Sync Enabled`;
+            return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+};
+
+
 const setupPage = async () => {
     // Init state and render status
     app.elements.visibilityState = document.querySelector('#status');
@@ -252,6 +276,8 @@ const setupPage = async () => {
     app.elements.orientationStateEL = document.querySelector('#orientationStatus');
     app.elements.portraitBtn = document.querySelector('#portraitBtn');
     app.elements.landscapeBtn = document.querySelector('#landscapeBtn');
+
+    app.elements.backgroundSyncBtn = document.querySelector('#backgroundSyncBtn');
 
     await loadLogs();
     renderState();
@@ -290,6 +316,10 @@ const setupPage = async () => {
     }
     app.elements.portraitBtn.addEventListener('click', lockPortraitOrientation);
     app.elements.landscapeBtn.addEventListener('click', lockLandscapeOrientation);
+
+    // Background Sync API
+    checkForBackgroundSync();
+    app.elements.backgroundSyncBtn.addEventListener('click', registerForBackgroundSync);
 
 }
 
