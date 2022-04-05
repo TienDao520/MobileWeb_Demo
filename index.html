@@ -48,7 +48,20 @@
             <ons-button id="stopIdleBtn">Stop Idle Detection</ons-button>
           </div>
         </ons-list-item>
-
+        <ons-list-header>Wake Lock</ons-list-header>
+        <ons-list-item>
+          <div class="center state">
+            <span class="notification" id="lockStatus">No Lock</span>
+          </div>
+        </ons-list-item>
+        <ons-list-item modifier="longdivider">
+          <div class="left">
+            <ons-button id="acquireLockBtn">Acquire Wake Lock</ons-button>
+          </div>
+          <div class="right">
+            <ons-button id="releaseLockBtn">Release Wake Lock</ons-button>
+          </div>
+        </ons-list-item>
       </on-list>
     </ons-page>
   </template>
