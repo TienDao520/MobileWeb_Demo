@@ -183,10 +183,10 @@ const initBattery = async () => {
     }
 }
 
-const vibrateOnce = () => { };
+const vibrateOnce = () => navigator.vibrate(200);
 
-
-const vibratePattern = () => { };
+const pattern = [200, 500, 200, 50, 500];
+const vibratePattern = () => navigator.vibrate(pattern);
 
 const vibratePersistent = () => {
 
