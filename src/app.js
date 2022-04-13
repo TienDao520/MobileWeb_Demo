@@ -7,6 +7,10 @@ let elements = {
     batteryCharging: null,
     batteryTime: null,
 
+    vibrateOnce: null,
+    vibratePattern: null,
+    vibratePersistent: null,
+    vibrateCancel: null,
 
 }
 
@@ -190,6 +194,11 @@ const setupPage = () => {
         batteryLevel: document.querySelector('#batteryLevel'),
         batteryCharging: document.querySelector('#batteryCharging'),
         batteryTime: document.querySelector('#batteryTime'),
+
+        vibrateOnce: document.querySelector('#vibrateOnce'),
+        vibratePattern: document.querySelector('#vibratePattern'),
+        vibratePersistent: document.querySelector('#vibratePersistent'),
+        vibrateCancel: document.querySelector('#vibrateCancel'),
 
     }
 
