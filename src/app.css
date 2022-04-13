@@ -79,3 +79,15 @@ img {
 #batteryLevel.low .progress-bar .progress-bar__primary {
   background-color: #EF476F;
 }
+
+ons-button.button {
+  background-color: #118AB2;
+}
+
+#vibratePersistent {
+  background-color: #06D6A0;
+}
+
+#vibrateCancel {
+  background-color: #073B4C;
+}
