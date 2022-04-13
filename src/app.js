@@ -139,11 +139,19 @@ const onTimeChange = (bat) => {
 }
 
 const onChargeTimeChange = (bat) => {
-
+    console.log(`Battery charging time: ${bat.chargingTime} seconds`);
+    deviceState.battery.chargeTime = bat.chargingTime;
+    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
+    elements.batteryTime.classList.add('charging');
+    elements.batteryTime.classList.remove('discharging');
 }
 
 const onDischargeTimeChange = (bat) => {
-
+    console.log(`Battery discharging time: ${bat.dischargingTime} seconds`);
+    deviceState.battery.dischargeTime = bat.dischargingTime;
+    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
+    elements.batteryTime.classList.add('discharging');
+    elements.batteryTime.classList.remove('charging');
 }
 
 const updateBatteryInfo = (bat) => {
