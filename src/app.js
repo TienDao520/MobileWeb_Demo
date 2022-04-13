@@ -183,7 +183,25 @@ const initBattery = async () => {
     }
 }
 
+const vibrateOnce = () => { };
 
+
+const vibratePattern = () => { };
+
+const vibratePersistent = () => {
+
+}
+
+const vibrateCancel = () => {
+
+}
+
+const initVibrate = () => {
+    elements.vibrateOnce.addEventListener('click', vibrateOnce)
+    elements.vibratePattern.addEventListener('click', vibratePattern)
+    elements.vibratePersistent.addEventListener('click', vibratePersistent)
+    elements.vibrateCancel.addEventListener('click', vibrateCancel)
+}
 
 const setupPage = () => {
     elements = {
