@@ -17,6 +17,23 @@ const batteryOK = async () => {
   }
 }
 
+const syncContent = async () => {
+  try {
+    //Beside the battery and network storage space can be checked here
+    // If any conditions aren't met we should not sync (fetch data)
+    // battery is low, network slow or not enough storage space.
+    if (await batteryOK() && networkOK()) {
+      const response = await fetch('http://www.randomnumberapi.com/api/v1.0/random?min=0&max=125&count=1');
+      if (response.ok) {
+        const numbers = await response.json();
+        const badgeNumber = numbers[0];
+        navigator.setAppBadge(badgeNumber);
+      }
+    }
+  } catch (e) {
+    console.log('Could not sync content', e);
+  }
+}
 
 //Check the network for periodicsync
 const networkOK = () => {
