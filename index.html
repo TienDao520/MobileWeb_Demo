@@ -68,6 +68,19 @@
             <ons-button id="vibrateCancel">Stop</ons-button>
           </div>
         </ons-list-item>
+
+        <ons-list-header>Periodic Background Sync</ons-list-header>
+        <ons-list-item modifier="longdivider">
+          <div class="left">
+            <ons-button id="registerForSync">Register</ons-button>
+          </div>
+          <div class="center justify-center">
+            <span class="notification sync not-registered" id="syncStatus">Not Registered</span>
+          </div>
+          <div class="right">
+            <ons-button id="unregisterSync">Unregister</ons-button>
+          </div>
+        </ons-list-item>
       </ons-list>
     </ons-page>
   </template>
