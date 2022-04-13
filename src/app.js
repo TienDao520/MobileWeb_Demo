@@ -6,6 +6,26 @@ let elements = {
     batteryLevel: null,
     batteryCharging: null,
     batteryTime: null,
+
+
+}
+
+const deviceState = {
+    network: {
+        type: null,
+        effectiveType: null,
+        downlink: null,
+        downlinkMax: null,
+        online: true,
+        connection,
+    },
+    battery: {
+        charging: false,
+        level: null,
+        chargeTime: null,
+        dischargeTime: null,
+    },
+    vibrateInterval: null,
 }
 
 const setupPage = () => {
