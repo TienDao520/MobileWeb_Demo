@@ -78,6 +78,99 @@ const initNetwork = () => {
     window.addEventListener('offline', () => handleOnlineChange(false));
 }
 
+//Handle when battery level changes
+const onLevelChange = (bat) => {
+    const level = Math.round(bat.level * 100);
+    console.log(`Battery level: ${level}%`);
+    deviceState.battery.level = level;
+    elements.batteryLevel.setAttribute('value', level);
+
+    if (level > 66) {
+        elements.batteryLevel.classList.add('high');
+
+        elements.batteryLevel.classList.remove('medium');
+        elements.batteryLevel.classList.remove('low');
+    } else if (level > 33) {
+        elements.batteryLevel.classList.add('medium');
+
+        elements.batteryLevel.classList.remove('low');
+        elements.batteryLevel.classList.remove('high');
+    } else {
+        elements.batteryLevel.classList.add('low');
+
+        elements.batteryLevel.classList.remove('high');
+        elements.batteryLevel.classList.remove('medium');
+    }
+    onTimeChange(bat);
+}
+
+//Handle when battery is charging
+const onChargingChange = (bat) => {
+    console.log(`Battery charging?: ${bat.charging ? 'Yes' : 'No'}`);
+    deviceState.battery.charging = bat.charging;
+    elements.batteryCharging.innerHTML = bat.charging ? 'Charging' : 'Discharging';
+
+    if (bat.charging) {
+        elements.batteryCharging.classList.add('charging');
+        elements.batteryCharging.classList.remove('discharging');
+    } else {
+        elements.batteryCharging.classList.add('discharging');
+        elements.batteryCharging.classList.remove('charging');
+    }
+    onTimeChange(bat);
+}
+
+const onTimeChange = (bat) => {
+    if (bat.charging) {
+        onDischargeTimeChange(bat);
+        onChargeTimeChange(bat);
+    } else {
+        onChargeTimeChange(bat);
+        onDischargeTimeChange(bat);
+    }
+}
+
+const onChargeTimeChange = (bat) => {
+    console.log(`Battery charging time: ${bat.chargingTime} seconds`);
+    deviceState.battery.chargeTime = bat.chargingTime;
+    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
+    elements.batteryTime.classList.add('charging');
+    elements.batteryTime.classList.remove('discharging');
+}
+
+const onDischargeTimeChange = (bat) => {
+    console.log(`Battery discharging time: ${bat.dischargingTime} seconds`);
+    deviceState.battery.dischargeTime = bat.dischargingTime;
+    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
+    elements.batteryTime.classList.add('discharging');
+    elements.batteryTime.classList.remove('charging');
+}
+
+const updateBatteryInfo = (bat) => {
+    console.log('------INITIAL BATTERY STATE-----')
+    onLevelChange(bat);
+    onChargingChange(bat);
+    onTimeChange(bat);
+    console.log('------INITIAL BATTERY STATE-----')
+}
+
+const initBattery = async () => {
+    try {
+        const battery = await navigator.getBattery();
+        if (battery) {
+            updateBatteryInfo(battery);
+            battery.addEventListener('levelchange', () => onLevelChange(battery));
+            battery.addEventListener('chargingchange', () => onLevelChange(battery));
+            battery.addEventListener('chargingtimechange', () => onChargeTimeChange(battery));
+            battery.addEventListener('dischargingtimechange', () => onDischargeTimeChange(battery));
+        }
+    } catch (e) {
+        console.log('Does not support the Battery API', e);
+    }
+}
+
+
+
 const setupPage = () => {
     elements = {
         networkType: document.querySelector('#networkType'),
