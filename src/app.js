@@ -10,6 +10,8 @@ let elements = {
 
 }
 
+//get action from navigator
+const { connection } = navigator
 const deviceState = {
     network: {
         type: null,
@@ -29,14 +31,45 @@ const deviceState = {
 }
 
 const onNetworkUpdate = (networkInfo) => {
+    const network = networkInfo || deviceState.network.connection;
+    console.log(`Current network type is: ${type || 'unkown'}`);
+    console.log(`This network is equivalent to a: ${effectiveType || 'unkown'} cellular network`);
+    console.log(`The network speed is: ${downlink || 'unkown'} mb`);
+    console.log(`The theoretical maximum network speed is: ${downlinkMax || 'unkown'} mb`);
+
+    deviceState.network.type = type;
+    deviceState.network.effectiveType = effectiveType;
+    deviceState.network.downlink = downlink;
+    deviceState.network.downlinkMax = downlinkMax;
+
+    //For display
+    elements.networkType.innerHTML = `${type || '-'} | ${effectiveType || '-'}`;
+    elements.networkDownlink.innerHTML = `${downlink || '-'}mb | ${downlinkMax || '-'}mb`;
 
 }
 
+//Handle for online and offline
 const handleOnlineChange = (online) => {
+    console.log(`The user is ${online ? 'currently' : 'not currently'} connected to a Local Area Network.`);
+    deviceState.network.online = online;
+    //in case like background sync API
+    //check to make sure data stay remote then no need to fetch right now
+    const savingData = connection.saveData === true ? 'Save ON' : 'Save OFF';
+    elements.networkOnline.innerHTML = online ? `Online | ${savingData}` : `Offline | ${savingData}`;
+    if (online) {
+        //replace the class for css display
+        elements.networkOnline.classList.add('online')
+        elements.networkOnline.classList.remove('offline')
+    } else {
+        elements.networkOnline.classList.add('offline')
+        elements.networkOnline.classList.remove('online')
+    }
 }
 
 const initNetwork = () => {
+    //undefined at initial
     onNetworkUpdate(undefined);
+    //We are online by default (begining) 
     handleOnlineChange(true);
 
 }
