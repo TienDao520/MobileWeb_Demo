@@ -58,6 +58,15 @@ img {
   background-color: #EF476F;
 }
 
+#batteryLevel {
+  width: 100px;
+  height: 8px;
+}
+
+#batteryLevel .progress-bar {
+  height: 8px;
+}
+
 #batteryLevel .progress-bar .progress-bar__primary {
   background-color: #06D6A0;
 }

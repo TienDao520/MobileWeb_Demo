@@ -164,6 +164,7 @@ const updateBatteryInfo = (bat) => {
 
 const initBattery = async () => {
     try {
+        //navigator.getBattery() return a promise
         const battery = await navigator.getBattery();
         //check the battery is exist
         if (battery) {
@@ -194,6 +195,10 @@ const setupPage = () => {
 
     // Network
     initNetwork();
+
+    // Battery 
+    initBattery();
+
 }
 
 document.addEventListener('init', setupPage);
