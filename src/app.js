@@ -218,7 +218,26 @@ const initVibrate = () => {
 }
 
 const checkForSyncRegistration = async () => {
+    const registration = await navigator.serviceWorker.ready;
+    try {
+        const tags = await registration.periodicSync.getTags();
+        const registered = tags.includes('my-sync-tag');
 
+        if (registered) {
+            elements.syncStatus.innerHTML = 'Registered';
+            elements.syncStatus.classList.add('registered');
+            elements.syncStatus.classList.remove('not-registered');
+        } else {
+            elements.syncStatus.innerHTML = 'Not Registered';
+            elements.syncStatus.classList.add('not-registered');
+            elements.syncStatus.classList.remove('registered');
+        }
+
+        return registered;
+    } catch (e) {
+        console.log('Could not check for registration', e);
+        return false;
+    }
 }
 
 const registerForSync = async () => {
@@ -238,11 +257,20 @@ const registerForSync = async () => {
 }
 
 const unregisterForSync = async () => {
-
+    const registration = await navigator.serviceWorker.ready;
+    try {
+        await registration.periodicSync.unregister('my-sync-tag');
+        checkForSyncRegistration();
+    } catch (e) {
+        console.log('Could not unregister for sync', e);
+    }
 }
 
 const askSyncPermission = async () => {
     const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+    //2 conditions need to be granted
+    //- application must be installed as PWA
+    //- must engage the user enough
     if (status.state === 'granted') {
         registerForSync();
     } else {
@@ -279,6 +307,11 @@ const setupPage = () => {
 
     // Vibrate
     initVibrate();
+
+    // Periodic Background Sync
+    checkForSyncRegistration();
+    elements.registerForSync.addEventListener('click', askSyncPermission);
+    elements.unregisterSync.addEventListener('click', unregisterForSync);
 
 }
 
