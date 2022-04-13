@@ -12,6 +12,10 @@ let elements = {
     vibratePersistent: null,
     vibrateCancel: null,
 
+    registerForSync: null,
+    syncStatus: null,
+    unregisterSync: null,
+
 }
 
 //get action from navigator
@@ -227,6 +231,10 @@ const setupPage = () => {
         vibratePattern: document.querySelector('#vibratePattern'),
         vibratePersistent: document.querySelector('#vibratePersistent'),
         vibrateCancel: document.querySelector('#vibrateCancel'),
+
+        registerForSync: document.querySelector('#registerForSync'),
+        syncStatus: document.querySelector('#syncStatus'),
+        unregisterSync: document.querySelector('#unregisterSync'),
 
     }
 
