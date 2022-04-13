@@ -31,6 +31,7 @@ const deviceState = {
         chargeTime: null,
         dischargeTime: null,
     },
+    //Need interval setup for vibratePersistent
     vibrateInterval: null,
 }
 
@@ -189,11 +190,20 @@ const pattern = [200, 500, 200, 50, 500];
 const vibratePattern = () => navigator.vibrate(pattern);
 
 const vibratePersistent = () => {
-
+    //Clear to stop create multiple loops vibrate the never end
+    if (deviceState.vibrateInterval) clearInterval(deviceState.vibrateInterval);
+    //Get total time from pattern
+    const time = pattern.reduce((sum, timing) => sum + timing, 0);
+    //add 250 break between the loop
+    deviceState.vibrateInterval = setInterval(vibratePattern, time + 250);
+    setTimeout(vibrateCancel, 25000);
 }
 
 const vibrateCancel = () => {
-
+    //FUlly clear the vibrate interval
+    clearInterval(deviceState.vibrateInterval);
+    //Stop vibrating
+    navigator.vibrate(0);
 }
 
 const initVibrate = () => {
