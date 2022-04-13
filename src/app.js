@@ -80,11 +80,14 @@ const initNetwork = () => {
 
 //Handle when battery level changes
 const onLevelChange = (bat) => {
+    //battery.level returns a number between zero and one
     const level = Math.round(bat.level * 100);
     console.log(`Battery level: ${level}%`);
     deviceState.battery.level = level;
+    //set the progress bar
     elements.batteryLevel.setAttribute('value', level);
 
+    //For each level change for class to effect the display with css
     if (level > 66) {
         elements.batteryLevel.classList.add('high');
 
@@ -106,21 +109,12 @@ const onLevelChange = (bat) => {
 
 //Handle when battery is charging
 const onChargingChange = (bat) => {
-    console.log(`Battery charging?: ${bat.charging ? 'Yes' : 'No'}`);
-    deviceState.battery.charging = bat.charging;
-    elements.batteryCharging.innerHTML = bat.charging ? 'Charging' : 'Discharging';
 
-    if (bat.charging) {
-        elements.batteryCharging.classList.add('charging');
-        elements.batteryCharging.classList.remove('discharging');
-    } else {
-        elements.batteryCharging.classList.add('discharging');
-        elements.batteryCharging.classList.remove('charging');
-    }
-    onTimeChange(bat);
 }
 
 const onTimeChange = (bat) => {
+    //If we're actually charging you want to run charge time last 
+    //so that it shows the charging time
     if (bat.charging) {
         onDischargeTimeChange(bat);
         onChargeTimeChange(bat);
@@ -128,22 +122,15 @@ const onTimeChange = (bat) => {
         onChargeTimeChange(bat);
         onDischargeTimeChange(bat);
     }
+
 }
 
 const onChargeTimeChange = (bat) => {
-    console.log(`Battery charging time: ${bat.chargingTime} seconds`);
-    deviceState.battery.chargeTime = bat.chargingTime;
-    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
-    elements.batteryTime.classList.add('charging');
-    elements.batteryTime.classList.remove('discharging');
+
 }
 
 const onDischargeTimeChange = (bat) => {
-    console.log(`Battery discharging time: ${bat.dischargingTime} seconds`);
-    deviceState.battery.dischargeTime = bat.dischargingTime;
-    elements.batteryTime.innerHTML = `${bat.chargingTime}(s)`;
-    elements.batteryTime.classList.add('discharging');
-    elements.batteryTime.classList.remove('charging');
+
 }
 
 const updateBatteryInfo = (bat) => {
@@ -157,6 +144,7 @@ const updateBatteryInfo = (bat) => {
 const initBattery = async () => {
     try {
         const battery = await navigator.getBattery();
+        //check the battery is exist
         if (battery) {
             updateBatteryInfo(battery);
             battery.addEventListener('levelchange', () => onLevelChange(battery));
