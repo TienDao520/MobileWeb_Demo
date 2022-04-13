@@ -73,7 +73,9 @@ const initNetwork = () => {
     onNetworkUpdate(undefined);
     //We are online by default (begining) 
     handleOnlineChange(true);
-
+    connection.addEventListener('change', onNetworkUpdate);
+    window.addEventListener('online', () => handleOnlineChange(true));
+    window.addEventListener('offline', () => handleOnlineChange(false));
 }
 
 const setupPage = () => {

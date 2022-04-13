@@ -57,3 +57,16 @@ img {
 .notification.discharging {
   background-color: #EF476F;
 }
+
+#batteryLevel .progress-bar .progress-bar__primary {
+  background-color: #06D6A0;
+}
+#batteryLevel.high .progress-bar .progress-bar__primary {
+  background-color: #06D6A0;
+}
+#batteryLevel.medium .progress-bar .progress-bar__primary {
+  background-color: #FFD166;
+}
+#batteryLevel.low .progress-bar .progress-bar__primary {
+  background-color: #EF476F;
+}
