@@ -28,6 +28,19 @@ const deviceState = {
     vibrateInterval: null,
 }
 
+const onNetworkUpdate = (networkInfo) => {
+
+}
+
+const handleOnlineChange = (online) => {
+}
+
+const initNetwork = () => {
+    onNetworkUpdate(undefined);
+    handleOnlineChange(true);
+
+}
+
 const setupPage = () => {
     elements = {
         networkType: document.querySelector('#networkType'),
@@ -39,6 +52,9 @@ const setupPage = () => {
         batteryTime: document.querySelector('#batteryTime'),
 
     }
+
+    // Network
+    initNetwork();
 }
 
 document.addEventListener('init', setupPage);
