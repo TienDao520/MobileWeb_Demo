@@ -32,6 +32,7 @@ const deviceState = {
 
 const onNetworkUpdate = (networkInfo) => {
     const network = networkInfo || deviceState.network.connection;
+    const { type, effectiveType, downlink, downlinkMax } = network;
     console.log(`Current network type is: ${type || 'unkown'}`);
     console.log(`This network is equivalent to a: ${effectiveType || 'unkown'} cellular network`);
     console.log(`The network speed is: ${downlink || 'unkown'} mb`);
@@ -54,6 +55,7 @@ const handleOnlineChange = (online) => {
     deviceState.network.online = online;
     //in case like background sync API
     //check to make sure data stay remote then no need to fetch right now
+    //connection === deviceState.network.connection
     const savingData = connection.saveData === true ? 'Save ON' : 'Save OFF';
     elements.networkOnline.innerHTML = online ? `Online | ${savingData}` : `Offline | ${savingData}`;
     if (online) {
