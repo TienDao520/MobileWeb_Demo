@@ -208,6 +208,9 @@ const setupPage = () => {
     // Battery 
     initBattery();
 
+    // Vibrate
+    initVibrate();
+
 }
 
 document.addEventListener('init', setupPage);
