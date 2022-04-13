@@ -217,6 +217,22 @@ const initVibrate = () => {
     elements.vibrateCancel.addEventListener('click', vibrateCancel)
 }
 
+const checkForSyncRegistration = async () => {
+
+}
+
+const registerForSync = async () => {
+
+}
+
+const unregisterForSync = async () => {
+
+}
+
+const askSyncPermission = async () => {
+
+}
+
 const setupPage = () => {
     elements = {
         networkType: document.querySelector('#networkType'),
