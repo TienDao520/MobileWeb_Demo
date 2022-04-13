@@ -222,7 +222,19 @@ const checkForSyncRegistration = async () => {
 }
 
 const registerForSync = async () => {
-
+    const registration = await navigator.serviceWorker.ready;
+    try {
+        const alreadyRegistered = await checkForSyncRegistration();
+        if (!alreadyRegistered) {
+            await registration.periodicSync.register('my-sync-tag', {
+                // 12 hours
+                minInterval: 12 * 60 * 60 * 1000
+            })
+        }
+        checkForSyncRegistration();
+    } catch (e) {
+        console.log('Could not register for sync', e);
+    }
 }
 
 const unregisterForSync = async () => {
