@@ -2,12 +2,19 @@ const version = 1.2;
 const cacheName = `MyCacheName ${version}`;
 const filesToCache = ["offline.html", "assets/images/icon.png", "assets/images/offline.svg", "src/app.js", "src/app.css"];
 
+//Similar to regular sync
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'my-sync-tag') {
+    event.waitUntil(syncContent());
+  }
+})
+
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(cacheName).then(async (cache) => {
     for (const file of filesToCache) {
       try {
         await cache.add(file);
-      } catch(e) {
+      } catch (e) {
         console.error(file, e);
       }
     }
