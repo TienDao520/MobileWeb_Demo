@@ -109,6 +109,19 @@ const onLevelChange = (bat) => {
 
 //Handle when battery is charging
 const onChargingChange = (bat) => {
+    console.log(`Battery charging?: ${bat.charging ? 'Yes' : 'No'}`);
+    deviceState.battery.charging = bat.charging;
+    elements.batteryCharging.innerHTML = bat.charging ? 'Charging' : 'Discharging';
+
+    //For charging add class to effect the display with css
+    if (bat.charging) {
+        elements.batteryCharging.classList.add('charging');
+        elements.batteryCharging.classList.remove('discharging');
+    } else {
+        elements.batteryCharging.classList.add('discharging');
+        elements.batteryCharging.classList.remove('charging');
+    }
+    onTimeChange(bat);
 
 }
 
