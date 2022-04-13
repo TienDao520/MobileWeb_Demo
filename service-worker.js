@@ -2,6 +2,38 @@ const version = 1.2;
 const cacheName = `MyCacheName ${version}`;
 const filesToCache = ["offline.html", "assets/images/icon.png", "assets/images/offline.svg", "src/app.js", "src/app.css"];
 
+//Check battery for periodicsync
+const batteryOK = async () => {
+  try {
+    const battery = await navigator.getBattery();
+    if (battery.charging || battery.level > 0.2) {
+      return true;
+    }
+    return false;
+  } catch (e) {
+    console.log('Could not access Battery API');
+    // Just return true since some browsers like firefox doesn't support it
+    return true;
+  }
+}
+
+
+//Check the network for periodicsync
+const networkOK = () => {
+  const { connection } = navigator;
+  const { effectiveType, downlink } = connection;
+
+  if (
+    effectiveType !== 'slow-2G'
+    && effectiveType !== '2G'
+    && downlink > 1
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 //Similar to regular sync
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'my-sync-tag') {
