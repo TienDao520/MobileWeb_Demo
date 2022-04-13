@@ -230,7 +230,12 @@ const unregisterForSync = async () => {
 }
 
 const askSyncPermission = async () => {
-
+    const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+    if (status.state === 'granted') {
+        registerForSync();
+    } else {
+        console.log('Sync permission is denied');
+    }
 }
 
 const setupPage = () => {
